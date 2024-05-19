@@ -1,17 +1,14 @@
-def steps(number):
-    # Check if the input is a positive integer
-    if not isinstance(number, int) or number <= 0:
+def steps(number, memo={}):
+    if number <= 0:
         raise ValueError("Only positive integers are allowed")
-    
-    # Initialize the step counter
-    step_count = 0
-    
-    # Apply the Collatz Conjecture until the number becomes 1
+    count = 0
     while number != 1:
-        if number % 2 == 0:
-            number //= 2  # Divide by 2 if even
+        if number in memo:
+            return count + memo[number]
+        if number & 1 == 0:  # faster check for evenness
+            number = number >> 1  # bit manipulation for division by 2
         else:
-            number = 3 * number + 1  # Multiply by 3 and add 1 if odd
-        step_count += 1  # Increment the step counter
-    
-    return step_count
+            number = 3 * number + 1
+        count += 1
+    memo[number] = count
+    return count
